@@ -1,0 +1,486 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MioCash · Prima nota a partita doppia</title>
+<meta name="description" content="MioCash è l'app gratuita per tenere i conti di casa con la partita doppia: prima nota, conti, statistiche e patrimonio. Per Android, iPhone e Windows, con i dati solo sui tuoi dispositivi.">
+<meta name="theme-color" content="#00796b">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="canonical" href="https://www.miocash.it/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="MioCash · Prima nota a partita doppia">
+<meta property="og:description" content="I conti di casa con la precisione della partita doppia. Gratis per Android, iPhone e Windows.">
+<meta property="og:url" content="https://www.miocash.it/">
+<meta property="og:image" content="https://www.miocash.it/icona.png">
+<meta property="og:locale" content="it_IT">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --verde:#00796b; --verde-chiaro:#009688; --verde-scuro:#004d44; --verde-tenue:#e0f2f1; --riga:#b2dfdb;
+  --oro:#ffc107; --oro-scuro:#e69100;
+  --testo:#14211f; --testo-2:#4b5d5a; --fondo:#f7faf9; --carta:#ffffff; --bordo:#dfe8e6;
+  --ombra:0 1px 2px rgba(0,40,36,.06),0 8px 24px rgba(0,40,36,.08);
+  --raggio:18px;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --verde:#4db6ac; --verde-chiaro:#80cbc4; --verde-scuro:#00332d; --verde-tenue:#0f2a27; --riga:#2c4b47;
+    --testo:#e6efed; --testo-2:#9fb3af; --fondo:#0b1513; --carta:#12201e; --bordo:#1f3330;
+    --ombra:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.35);
+  }
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--testo);background:var(--fondo);line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:var(--verde)}
+img{max-width:100%;display:block}
+.contenitore{max-width:1120px;margin:0 auto;padding:0 20px}
+
+/* Barra */
+.barra{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--fondo) 82%,transparent);backdrop-filter:saturate(1.4) blur(12px);-webkit-backdrop-filter:saturate(1.4) blur(12px);border-bottom:1px solid var(--bordo)}
+.barra .contenitore{display:flex;align-items:center;justify-content:space-between;height:64px}
+.marchio{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.15rem;color:var(--testo);text-decoration:none}
+.marchio img{width:34px;height:34px;border-radius:9px}
+.menu{display:flex;gap:26px;align-items:center}
+.menu a{color:var(--testo-2);text-decoration:none;font-weight:500;font-size:.95rem}
+.menu a:hover{color:var(--testo)}
+.menu .pulsante{color:#fff}
+@media (max-width:720px){.menu a:not(.pulsante){display:none}}
+
+/* Pulsanti */
+.pulsante{display:inline-flex;align-items:center;gap:10px;padding:12px 20px;border-radius:12px;font-weight:700;text-decoration:none;font-size:.98rem;transition:transform .15s,box-shadow .15s,background .15s;border:0;cursor:pointer}
+.pulsante svg{width:20px;height:20px;flex:none}
+.primario{background:var(--verde-chiaro);color:#fff;box-shadow:0 6px 18px rgba(0,121,107,.3)}
+@media (prefers-color-scheme:dark){.primario{background:#00897b}}
+.primario:hover{transform:translateY(-1px);box-shadow:0 10px 24px rgba(0,121,107,.36)}
+.secondario{background:var(--carta);color:var(--testo);border:1px solid var(--bordo)}
+.secondario:hover{transform:translateY(-1px);box-shadow:var(--ombra)}
+.pulsante.grande{padding:16px 24px;font-size:1.02rem}
+.pulsante small{display:block;font-weight:500;font-size:.78rem;opacity:.85;line-height:1.2}
+.pulsante .etichetta{display:flex;flex-direction:column;align-items:flex-start;line-height:1.25}
+
+/* Apertura */
+.apertura{position:relative;overflow:hidden;padding:72px 0 88px}
+.apertura::before{content:"";position:absolute;inset:-40% -20% auto auto;width:780px;height:780px;background:radial-gradient(closest-side,rgba(0,150,136,.18),transparent);pointer-events:none}
+.apertura .contenitore{display:grid;grid-template-columns:1.1fr .9fr;gap:56px;align-items:center}
+@media (max-width:900px){.apertura .contenitore{grid-template-columns:1fr}.apertura{padding:44px 0 64px}}
+.occhiello{display:inline-flex;align-items:center;gap:8px;background:var(--verde-tenue);color:var(--verde);font-weight:700;font-size:.82rem;padding:6px 12px;border-radius:999px;letter-spacing:.02em}
+h1{font-size:clamp(2.2rem,5vw,3.6rem);line-height:1.08;letter-spacing:-.03em;margin:18px 0 18px;font-weight:800}
+h1 em{font-style:normal;color:var(--verde-chiaro);position:relative;white-space:nowrap}
+.sottotitolo{font-size:1.15rem;color:var(--testo-2);max-width:540px;margin:0 0 30px}
+.azioni{display:flex;flex-wrap:wrap;gap:12px}
+.nota-versione{margin-top:16px;color:var(--testo-2);font-size:.88rem}
+
+/* Telefono dimostrativo */
+.scena{position:relative;display:flex;justify-content:center}
+.telefono{width:300px;max-width:100%;aspect-ratio:9/19;background:#0e1715;border-radius:42px;padding:11px;box-shadow:0 30px 60px rgba(0,40,36,.28),0 0 0 1px rgba(255,255,255,.06) inset;position:relative}
+.schermo{background:#f5f8f7;border-radius:32px;height:100%;overflow:hidden;display:flex;flex-direction:column;color:#14211f;font-size:12px}
+.schermo .testata{background:linear-gradient(180deg,#009688,#00796b);color:#fff;padding:26px 16px 16px}
+.schermo .testata .mese{opacity:.85;font-size:11px;font-weight:600}
+.schermo .testata .saldo{font-size:24px;font-weight:800;letter-spacing:-.02em;margin-top:2px}
+.schermo .testata .riquadri{display:flex;gap:8px;margin-top:12px}
+.schermo .testata .riquadri div{flex:1;background:rgba(255,255,255,.15);border-radius:10px;padding:7px 9px;font-size:10px}
+.schermo .testata .riquadri b{display:block;font-size:13px}
+.movimenti{padding:8px 12px;display:flex;flex-direction:column;gap:7px;flex:1}
+.movimento{background:#fff;border-radius:12px;padding:9px 11px;display:flex;align-items:center;gap:10px;box-shadow:0 1px 2px rgba(0,0,0,.05)}
+.movimento .ic{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;font-size:14px;flex:none}
+.movimento .desc{flex:1;min-width:0}
+.movimento .desc b{display:block;font-size:12px}
+.movimento .desc span{color:#6b7c79;font-size:10px}
+.movimento .imp{font-weight:700;font-size:12px}
+.neg{color:#c62828}.pos{color:#2e7d32}
+.schermo .navi{display:flex;justify-content:space-around;padding:10px 6px 14px;background:#fff;border-top:1px solid #e6eceb;font-size:9px;color:#6b7c79}
+.schermo .navi span{display:flex;flex-direction:column;align-items:center;gap:3px}
+.schermo .navi i{width:18px;height:4px;border-radius:2px;background:#cfd8d6}
+.schermo .navi .attivo{color:#00796b;font-weight:700}.schermo .navi .attivo i{background:#00796b}
+.moneta{position:absolute;right:calc(50% - 200px);bottom:40px;width:96px;height:96px;border-radius:50%;background:var(--oro);border:7px solid var(--oro-scuro);display:grid;place-items:center;color:#fff;font-weight:800;font-size:46px;box-shadow:0 18px 40px rgba(230,145,0,.35);animation:galleggia 5s ease-in-out infinite}
+.scheda-flottante{position:absolute;z-index:2;left:calc(50% - 230px);top:70px;background:var(--carta);border:1px solid var(--bordo);border-radius:14px;padding:10px 14px;box-shadow:var(--ombra);font-size:.8rem;animation:galleggia 6s ease-in-out infinite reverse}
+.scheda-flottante b{display:block;font-size:.95rem}
+.scheda-flottante .da{display:grid;grid-template-columns:auto auto;gap:2px 14px;margin-top:4px;color:var(--testo-2)}
+@keyframes galleggia{50%{transform:translateY(-10px)}}
+@media (max-width:520px){.moneta{right:6px;width:70px;height:70px;font-size:32px}.scheda-flottante{left:0;top:30px}}
+@media (prefers-reduced-motion:reduce){.moneta,.scheda-flottante{animation:none}}
+
+/* Sezioni */
+section{padding:80px 0}
+.intestazione{max-width:680px;margin:0 auto 48px;text-align:center}
+.intestazione h2{font-size:clamp(1.7rem,3.4vw,2.4rem);letter-spacing:-.02em;line-height:1.15;margin:10px 0 12px}
+.intestazione p{color:var(--testo-2);font-size:1.06rem;margin:0}
+.griglia{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+@media (max-width:900px){.griglia{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:600px){.griglia{grid-template-columns:1fr}}
+.carta{background:var(--carta);border:1px solid var(--bordo);border-radius:var(--raggio);padding:26px;box-shadow:var(--ombra)}
+.carta h3{margin:14px 0 6px;font-size:1.12rem}
+.carta p{margin:0;color:var(--testo-2);font-size:.96rem}
+.icona-funz{width:46px;height:46px;border-radius:12px;background:var(--verde-tenue);color:var(--verde);display:grid;place-items:center}
+.icona-funz svg{width:24px;height:24px}
+
+/* Partita doppia */
+.fascia{background:var(--carta);border-top:1px solid var(--bordo);border-bottom:1px solid var(--bordo)}
+.doppia{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
+@media (max-width:900px){.doppia{grid-template-columns:1fr}}
+.doppia h2{font-size:clamp(1.7rem,3.4vw,2.4rem);letter-spacing:-.02em;line-height:1.15;margin:10px 0 14px}
+.doppia p{color:var(--testo-2)}
+.elenco{list-style:none;padding:0;margin:22px 0 0;display:grid;gap:12px}
+.elenco li{display:flex;gap:12px;align-items:flex-start}
+.elenco li::before{content:"";flex:none;width:22px;height:22px;margin-top:2px;border-radius:50%;background:var(--verde-tenue) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23009688' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5 9-10'/%3E%3C/svg%3E") center/14px no-repeat}
+.registro{background:var(--fondo);border:1px solid var(--bordo);border-radius:var(--raggio);overflow:hidden;box-shadow:var(--ombra)}
+.registro .tit{padding:16px 20px;border-bottom:1px solid var(--bordo);display:flex;justify-content:space-between;font-weight:700}
+.registro .tit span{color:var(--testo-2);font-weight:500;font-size:.9rem}
+.registro table{width:100%;border-collapse:collapse;font-size:.95rem}
+.registro th{background:var(--verde);color:#fff;text-align:left;padding:10px 20px;font-size:.85rem;letter-spacing:.04em}
+@media (prefers-color-scheme:dark){.registro th{background:#00695c}}
+.registro td{padding:12px 20px;border-bottom:1px solid var(--bordo)}
+.registro td.num{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.registro tr.tot td{font-weight:800;border-bottom:0;background:var(--verde-tenue)}
+
+/* Download */
+.scarica-griglia{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+@media (max-width:1000px){.scarica-griglia{grid-template-columns:1fr}}
+.piattaforma{position:relative;display:flex;flex-direction:column}
+.piattaforma.consigliata{border:2px solid var(--verde-chiaro)}
+.piattaforma .badge{position:absolute;top:-12px;right:20px;background:var(--verde-chiaro);color:#fff;font-size:.75rem;font-weight:700;padding:4px 10px;border-radius:999px;display:none}
+.piattaforma.consigliata .badge{display:block}
+.piattaforma .capo{display:flex;align-items:center;gap:14px}
+.piattaforma .logo{width:54px;height:54px;border-radius:14px;display:grid;place-items:center;flex:none}
+.piattaforma .logo svg{width:30px;height:30px}
+.piattaforma h3{margin:0;font-size:1.3rem}
+.piattaforma .meta{color:var(--testo-2);font-size:.9rem}
+.piattaforma ol{color:var(--testo-2);font-size:.94rem;padding-left:20px;margin:18px 0 22px;flex:1}
+.piattaforma ol li{margin-bottom:6px}
+.piattaforma .pulsante{justify-content:center;width:100%}
+.novita{margin-top:28px}
+.novita summary{cursor:pointer;font-weight:700;list-style:none;display:flex;align-items:center;justify-content:space-between}
+.novita summary::-webkit-details-marker{display:none}
+.novita summary::after{content:"+";font-size:1.4rem;color:var(--verde-chiaro);font-weight:500}
+.novita[open] summary::after{content:"–"}
+.novita pre{white-space:pre-wrap;font-family:inherit;color:var(--testo-2);margin:14px 0 0;font-size:.95rem}
+.tutte{text-align:center;margin-top:18px;font-size:.92rem;color:var(--testo-2)}
+
+/* Domande */
+.domande{max-width:780px;margin:0 auto;display:grid;gap:12px}
+.domande details{background:var(--carta);border:1px solid var(--bordo);border-radius:14px;padding:18px 22px}
+.domande summary{cursor:pointer;font-weight:700;list-style:none;display:flex;justify-content:space-between;gap:16px}
+.domande summary::-webkit-details-marker{display:none}
+.domande summary::after{content:"+";font-size:1.4rem;line-height:1;color:var(--verde-chiaro);font-weight:500}
+.domande details[open] summary::after{content:"–"}
+.domande p{color:var(--testo-2);margin:12px 0 0}
+
+/* Invito finale */
+.invito{background:linear-gradient(135deg,#009688,#00594f);color:#fff;border-radius:28px;padding:56px 40px;text-align:center;position:relative;overflow:hidden}
+.invito h2{font-size:clamp(1.7rem,3.4vw,2.4rem);margin:0 0 10px;letter-spacing:-.02em}
+.invito p{opacity:.88;margin:0 0 26px;font-size:1.06rem}
+.invito .pulsante{background:#fff;color:#00594f}
+.invito .azioni{justify-content:center}
+.invito .secondario{background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.3)}
+
+footer{padding:40px 0 48px;color:var(--testo-2);font-size:.9rem}
+footer .contenitore{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:center}
+footer a{color:var(--testo-2)}
+</style>
+</head>
+<body>
+
+<header class="barra">
+  <div class="contenitore">
+    <a class="marchio" href="#"><img src="icona.png" alt="" width="34" height="34">MioCash</a>
+    <nav class="menu">
+      <a href="#funzioni">Funzioni</a>
+      <a href="#partita-doppia">Partita doppia</a>
+      <a href="#domande">Domande</a>
+      <a class="pulsante primario" href="#scarica">Scarica</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section class="apertura">
+  <div class="contenitore">
+    <div>
+      <span class="occhiello">Gratis · Android, iPhone e Windows · Senza pubblicità</span>
+      <h1>I conti di casa,<br>con la precisione della <em>partita doppia</em>.</h1>
+      <p class="sottotitolo">MioCash è la prima nota che sa sempre dove sono finiti i tuoi soldi: ogni euro che esce da un conto entra in un altro. Registri in un attimo, il saldo torna sempre.</p>
+      <div class="azioni">
+        <a class="pulsante primario grande" href="#scarica" id="scarica-principale">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-5-5m5 5l5-5M5 21h14"/></svg>
+          <span class="etichetta"><span id="scarica-principale-testo">Scarica MioCash</span><small id="scarica-principale-sotto">Android, iPhone e Windows</small></span>
+        </a>
+        <a class="pulsante secondario grande" href="#funzioni">Scopri le funzioni</a>
+      </div>
+      <p class="nota-versione" id="nota-versione">&nbsp;</p>
+    </div>
+
+    <div class="scena" aria-hidden="true">
+      <div class="scheda-flottante">
+        <b>Spesa al supermercato</b>
+        <div class="da"><span>Dare · Alimentari</span><span>48,90 €</span><span>Avere · Carta</span><span>48,90 €</span></div>
+      </div>
+      <div class="telefono">
+        <div class="schermo">
+          <div class="testata">
+            <div class="mese">Liquidità · novembre</div>
+            <div class="saldo">3.482,15 €</div>
+            <div class="riquadri"><div>Entrate<b>2.150,00</b></div><div>Uscite<b>1.236,40</b></div></div>
+          </div>
+          <div class="movimenti">
+            <div class="movimento"><div class="ic" style="background:#fff3e0">🛒</div><div class="desc"><b>Supermercato</b><span>Carta → Alimentari</span></div><div class="imp neg">−48,90</div></div>
+            <div class="movimento"><div class="ic" style="background:#e8f5e9">💼</div><div class="desc"><b>Stipendio</b><span>Lavoro → Banca</span></div><div class="imp pos">+2.150,00</div></div>
+            <div class="movimento"><div class="ic" style="background:#e3f2fd">⛽</div><div class="desc"><b>Carburante</b><span>Carta → Auto</span></div><div class="imp neg">−62,00</div></div>
+            <div class="movimento"><div class="ic" style="background:#f3e5f5">💡</div><div class="desc"><b>Bolletta luce</b><span>Banca → Utenze</span></div><div class="imp neg">−87,30</div></div>
+            <div class="movimento"><div class="ic" style="background:#e0f2f1">🏧</div><div class="desc"><b>Prelievo</b><span>Banca → Cassa</span></div><div class="imp">100,00</div></div>
+          </div>
+          <div class="navi"><span class="attivo"><i></i>Prima nota</span><span><i></i>Conti</span><span><i></i>Statistiche</span><span><i></i>Impostazioni</span></div>
+        </div>
+      </div>
+      <div class="moneta">€</div>
+    </div>
+  </div>
+</section>
+
+<section id="funzioni">
+  <div class="contenitore">
+    <div class="intestazione">
+      <span class="occhiello">Funzioni</span>
+      <h2>Tutto quello che serve, niente di superfluo</h2>
+      <p>Pensata per chi vuole sapere davvero com'è messo, senza abbonamenti e senza consegnare i propri dati a nessuno.</p>
+    </div>
+    <div class="griglia">
+      <div class="carta">
+        <div class="icona-funz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4zM12 4v16M4 9h16"/></svg></div>
+        <h3>Prima nota a partita doppia</h3>
+        <p>Ogni movimento ha un dare e un avere. Registrazioni semplici o con più righe, e i conti quadrano sempre.</p>
+      </div>
+      <div class="carta">
+        <div class="icona-funz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg></div>
+        <h3>Causali rapide</h3>
+        <p>Modelli per i movimenti di tutti i giorni: spesa, carburante, bollette. Due tocchi e hai registrato.</p>
+      </div>
+      <div class="carta">
+        <div class="icona-funz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></div>
+        <h3>Statistiche e patrimonio</h3>
+        <p>Entrate e uscite mese per mese, ripartizione per categoria, attività, passività e patrimonio netto.</p>
+      </div>
+      <div class="carta">
+        <div class="icona-funz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h13l-3-3M21 17H8l3 3"/></svg></div>
+        <h3>Telefono e PC insieme</h3>
+        <p>Esporta un archivio dal telefono e uniscilo sul computer (o viceversa): vedi le differenze movimento per movimento prima di confermare.</p>
+      </div>
+      <div class="carta">
+        <div class="icona-funz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg></div>
+        <h3>Privata per davvero</h3>
+        <p>I dati restano sui tuoi dispositivi. Password all'apertura, sblocco con impronta o volto, archivi cifrati AES-256.</p>
+      </div>
+      <div class="carta">
+        <div class="icona-funz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg></div>
+        <h3>Porta con te i vecchi conti</h3>
+        <p>Usavi un altro programma? Importa il suo archivio in formato XML (.xac): conti e movimenti passano in MioCash, e puoi abbinarli ai tuoi conti esistenti.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="fascia" id="partita-doppia">
+  <div class="contenitore doppia">
+    <div>
+      <span class="occhiello">Perché la partita doppia</span>
+      <h2>Il metodo dei contabili, reso semplice</h2>
+      <p>Un'app di spese normale annota solo «ho speso 50 €». MioCash annota anche <strong>da dove</strong> sono usciti e <strong>dove</strong> sono andati. Così il saldo della carta, del conto e del contante è sempre giusto, e sai esattamente quanto vale il tuo patrimonio.</p>
+      <ul class="elenco">
+        <li>Più libri separati: casa, attività, un viaggio da dividere.</li>
+        <li>Mastrino di ogni conto con saldo progressivo.</li>
+        <li>Tabella mensile per confrontare un anno a colpo d'occhio.</li>
+        <li>Conti e sottoconti come vuoi tu: cassa, banca, carte, prestiti.</li>
+      </ul>
+    </div>
+    <div class="registro" aria-label="Esempio di registrazione">
+      <div class="tit">Pagamento bolletta <span>12/11</span></div>
+      <table>
+        <thead><tr><th>Conto</th><th style="text-align:right">Dare</th><th style="text-align:right">Avere</th></tr></thead>
+        <tbody>
+          <tr><td>Utenze · Luce</td><td class="num">87,30</td><td class="num"></td></tr>
+          <tr><td>Banca · Conto corrente</td><td class="num"></td><td class="num">87,30</td></tr>
+          <tr class="tot"><td>Totale</td><td class="num">87,30</td><td class="num">87,30</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section id="scarica">
+  <div class="contenitore">
+    <div class="intestazione">
+      <span class="occhiello">Scarica</span>
+      <h2>Scarica MioCash gratis</h2>
+      <p id="scarica-versione">L'ultima versione, direttamente da qui.</p>
+    </div>
+
+    <div class="scarica-griglia">
+      <div class="carta piattaforma" id="carta-android">
+        <span class="badge">Per il tuo dispositivo</span>
+        <div class="capo">
+          <div class="logo" style="background:#e8f5e9;color:#2e7d32"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.6 9.48l1.84-3.18a.5.5 0 00-.87-.5l-1.86 3.22A11.4 11.4 0 0012 8c-1.7 0-3.3.38-4.71 1.02L5.43 5.8a.5.5 0 00-.87.5L6.4 9.48A10.8 10.8 0 001 18h22a10.8 10.8 0 00-5.4-8.52zM7 15.25a1.25 1.25 0 110-2.5 1.25 1.25 0 010 2.5zm10 0a1.25 1.25 0 110-2.5 1.25 1.25 0 010 2.5z"/></svg></div>
+          <div><h3>Android</h3><div class="meta" id="meta-android">File APK · Android 7 o successivo</div></div>
+        </div>
+        <ol>
+          <li>Tocca <strong>Scarica APK</strong> dal telefono.</li>
+          <li>Apri il file scaricato. La prima volta Android chiede di consentire l'installazione da questa fonte: conferma.</li>
+          <li>Fatto. Gli aggiornamenti successivi te li propone l'app da sola.</li>
+        </ol>
+        <a class="pulsante primario grande" id="link-apk" href="https://github.com/adrimas87/MioCash-releases/releases/latest">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-5-5m5 5l5-5M5 21h14"/></svg>Scarica APK</a>
+      </div>
+
+      <div class="carta piattaforma" id="carta-iphone">
+        <span class="badge">Per il tuo dispositivo</span>
+        <div class="capo">
+          <div class="logo" style="background:#f3e5f5;color:#6a1b9a"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M11 18h2"/></svg></div>
+          <div><h3>iPhone e iPad</h3><div class="meta">Si apre da Safari · nessun file da scaricare</div></div>
+        </div>
+        <ol>
+          <li>Dall'iPhone, apri <strong>Apri MioCash</strong> con Safari.</li>
+          <li>Tocca il pulsante <strong>Condividi</strong> e poi <strong>Aggiungi alla schermata Home</strong>.</li>
+          <li>Usa MioCash sempre dall'icona sulla schermata Home: i dati restano sull'iPhone e gli aggiornamenti arrivano da soli.</li>
+        </ol>
+        <a class="pulsante primario grande" id="link-iphone" href="app/">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 01-1 1H5a1 1 0 01-1-1V7a1 1 0 011-1h5"/></svg>Apri MioCash</a>
+      </div>
+
+      <div class="carta piattaforma" id="carta-windows">
+        <span class="badge">Per il tuo dispositivo</span>
+        <div class="capo">
+          <div class="logo" style="background:#e3f2fd;color:#1565c0"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5.1l7.4-1V11H3zM11.3 4l9.7-1.4V11h-9.7zM3 12h7.4v6.9L3 17.9zM11.3 12H21v8.4L11.3 19z"/></svg></div>
+          <div><h3>Windows</h3><div class="meta" id="meta-windows">Installazione EXE · Windows 10 e 11</div></div>
+        </div>
+        <ol>
+          <li>Scarica ed esegui il programma di installazione.</li>
+          <li>Se compare «Windows ha protetto il PC», fai clic su <strong>Ulteriori informazioni</strong> e poi su <strong>Esegui comunque</strong>.</li>
+          <li>Trovi MioCash nel menu Start. Per aggiornare, scarica di nuovo da qui: i dati restano.</li>
+        </ol>
+        <a class="pulsante primario grande" id="link-exe" href="https://github.com/adrimas87/MioCash-releases/releases/latest">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-5-5m5 5l5-5M5 21h14"/></svg>Scarica per Windows</a>
+      </div>
+    </div>
+
+    <details class="carta novita" id="novita" hidden>
+      <summary><span>Novità della versione <span id="novita-versione"></span></span></summary>
+      <pre id="novita-testo"></pre>
+    </details>
+    <p class="tutte"><a href="https://github.com/adrimas87/MioCash-releases/releases">Tutte le versioni</a></p>
+  </div>
+</section>
+
+<section id="domande" class="fascia">
+  <div class="contenitore">
+    <div class="intestazione">
+      <span class="occhiello">Domande frequenti</span>
+      <h2>Prima di iniziare</h2>
+    </div>
+    <div class="domande">
+      <details><summary>MioCash è davvero gratis?</summary><p>Sì. Niente abbonamenti, niente pubblicità, nessuna funzione a pagamento.</p></details>
+      <details><summary>Dove finiscono i miei dati?</summary><p>Solo sui tuoi dispositivi. MioCash non ha account né server: per passare i dati dal telefono al PC esporti un archivio (anche cifrato con password) e lo importi dall'altra parte.</p></details>
+      <details><summary>Devo sapere di contabilità?</summary><p>No. Le causali rapide fanno il lavoro per te: scegli «Spesa», l'importo e da quale conto hai pagato. La partita doppia lavora dietro le quinte.</p></details>
+      <details><summary>Perché non è sul Play Store?</summary><p>MioCash si distribuisce direttamente da questo sito. L'APK è firmato, e l'app controlla da sola se c'è una versione nuova e la installa con un tocco.</p></details>
+      <details><summary>Windows mi avvisa che il programma non è riconosciuto. È normale?</summary><p>Sì: succede con i programmi nuovi e poco diffusi. Fai clic su «Ulteriori informazioni» e poi su «Esegui comunque».</p></details>
+      <details><summary>E iPhone o Mac?</summary><p>Su iPhone e iPad MioCash si usa da Safari: apri la pagina dell'app e aggiungila alla schermata Home, così si apre come le altre app e funziona anche senza connessione. I dati restano nel telefono: per non perderli, salva ogni tanto un archivio da Impostazioni o tienili allineati con un altro dispositivo. Sul Mac puoi aprire la stessa pagina con il browser.</p></details>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="contenitore">
+    <div class="invito">
+      <h2>Inizia oggi a far quadrare i conti</h2>
+      <p>Bastano due minuti per installarla e registrare il primo movimento.</p>
+      <div class="azioni">
+        <a class="pulsante grande" href="#scarica">Scarica MioCash</a>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="contenitore">
+    <div class="marchio" style="font-size:1rem"><img src="icona.png" alt="" width="28" height="28" style="width:28px;height:28px;border-radius:7px">MioCash</div>
+    <div>© <span id="anno">2026</span> MioCash · Prima nota a partita doppia · <a href="privacy.html">Privacy</a></div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var repo = 'adrimas87/MioCash-releases';
+  var ua = navigator.userAgent || '';
+  var iOS = /iPhone|iPad|iPod/i.test(ua) || (/Macintosh/i.test(ua) && navigator.maxTouchPoints > 1);
+  var sistema = /Android/i.test(ua) ? 'android' : iOS ? 'iphone' : /Windows/i.test(ua) ? 'windows' : null;
+  document.getElementById('anno').textContent = new Date().getFullYear();
+
+  // Bottone principale e scheda evidenziata secondo il dispositivo di chi visita.
+  var principale = document.getElementById('scarica-principale');
+  if (sistema) {
+    document.getElementById('carta-' + sistema).classList.add('consigliata');
+    document.getElementById('scarica-principale-testo').textContent =
+      sistema === 'android' ? 'Scarica per Android' :
+      sistema === 'iphone' ? 'Apri MioCash su iPhone' : 'Scarica per Windows';
+  }
+  if (sistema === 'iphone') principale.href = '#carta-iphone';
+
+  function mb(byte) { return (byte / 1048576).toFixed(0).replace('.', ',') + ' MB'; }
+  function data(iso) {
+    return new Date(iso).toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' });
+  }
+  // Il tag è v<versione>+<build>, es. v1.0.5+6.
+  function versione(tag) { return tag.replace(/^v/, '').replace(/\+.*$/, ''); }
+  function allegato(release, estensione) {
+    return (release.assets || []).filter(function (a) {
+      return a.name.toLowerCase().slice(-estensione.length) === estensione;
+    })[0];
+  }
+
+  fetch('https://api.github.com/repos/' + repo + '/releases?per_page=20', {
+    headers: { Accept: 'application/vnd.github+json' }
+  })
+    .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(function (releases) {
+      releases = releases.filter(function (r) { return !r.draft && !r.prerelease; });
+      if (!releases.length) return;
+      var trovati = {};
+      [['apk', '.apk'], ['exe', '.exe']].forEach(function (c) {
+        for (var i = 0; i < releases.length; i++) {
+          var a = allegato(releases[i], c[1]);
+          if (a) { trovati[c[0]] = { release: releases[i], file: a }; break; }
+        }
+      });
+      if (trovati.apk) {
+        document.getElementById('link-apk').href = trovati.apk.file.browser_download_url;
+        document.getElementById('meta-android').textContent =
+          'Versione ' + versione(trovati.apk.release.tag_name) + ' · APK · ' + mb(trovati.apk.file.size);
+      }
+      if (trovati.exe) {
+        document.getElementById('link-exe').href = trovati.exe.file.browser_download_url;
+        document.getElementById('meta-windows').textContent =
+          'Versione ' + versione(trovati.exe.release.tag_name) + ' · EXE · ' + mb(trovati.exe.file.size);
+      }
+      var ultima = releases[0];
+      var nome = versione(ultima.tag_name);
+      document.getElementById('nota-versione').textContent =
+        'Versione ' + nome + ' · aggiornata il ' + data(ultima.published_at);
+      document.getElementById('scarica-versione').textContent =
+        'Versione ' + nome + ', pubblicata il ' + data(ultima.published_at) + '.';
+      document.getElementById('scarica-principale-sotto').textContent = 'Versione ' + nome + ' · gratis';
+      if (sistema === 'android' && trovati.apk) principale.href = trovati.apk.file.browser_download_url;
+      if (sistema === 'windows' && trovati.exe) principale.href = trovati.exe.file.browser_download_url;
+      if ((ultima.body || '').trim()) {
+        document.getElementById('novita-versione').textContent = nome;
+        document.getElementById('novita-testo').textContent = ultima.body.trim();
+        document.getElementById('novita').hidden = false;
+      }
+    })
+    .catch(function () { /* restano i collegamenti alla pagina delle versioni */ });
+})();
+</script>
+</body>
+</html>

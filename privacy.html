@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacy · MioCash</title>
+<meta name="description" content="Come MioCash tratta i tuoi dati: restano sui tuoi dispositivi, e il backup facoltativo su Google Drive è cifrato.">
+<meta name="theme-color" content="#00796b">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="canonical" href="https://www.miocash.it/privacy.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --verde:#00796b; --testo:#14211f; --testo-2:#4b5d5a; --fondo:#f7faf9; --carta:#ffffff; --bordo:#dfe8e6;
+}
+@media (prefers-color-scheme:dark){
+  :root{ --verde:#4db6ac; --testo:#e6efed; --testo-2:#9fb3af; --fondo:#0b1513; --carta:#12201e; --bordo:#1f3330; }
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--testo);background:var(--fondo);line-height:1.65;-webkit-font-smoothing:antialiased}
+a{color:var(--verde)}
+.contenitore{max-width:760px;margin:0 auto;padding:0 20px}
+.barra{border-bottom:1px solid var(--bordo)}
+.barra .contenitore{display:flex;align-items:center;height:64px}
+.marchio{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.15rem;color:var(--testo);text-decoration:none}
+.marchio img{width:34px;height:34px;border-radius:9px}
+main{padding:40px 0 24px}
+h1{font-size:2rem;line-height:1.2;margin:0 0 8px}
+h2{font-size:1.2rem;margin:32px 0 8px}
+.aggiornata{color:var(--testo-2);margin:0 0 24px}
+ul{padding-left:22px}
+li{margin:4px 0}
+footer{padding:32px 0 48px;color:var(--testo-2);font-size:.9rem;border-top:1px solid var(--bordo);margin-top:32px}
+footer a{color:var(--testo-2)}
+</style>
+</head>
+<body>
+
+<header class="barra">
+  <div class="contenitore">
+    <a class="marchio" href="./"><img src="icona.png" alt="" width="34" height="34">MioCash</a>
+  </div>
+</header>
+
+<main class="contenitore">
+  <h1>Privacy</h1>
+  <p class="aggiornata">Ultimo aggiornamento: 16 novembre 2026</p>
+
+  <p>MioCash è un'app per tenere i conti di casa. È pensata perché i tuoi dati restino tuoi: non c'è un account MioCash, non c'è un server MioCash e nessuno, oltre a te, vede i tuoi movimenti.</p>
+
+  <h2>Dove sono i tuoi dati</h2>
+  <ul>
+    <li>Conti, movimenti, causali e impostazioni sono salvati solo sui tuoi dispositivi (telefono Android, iPhone, PC Windows). Su Android e Windows il database è cifrato.</li>
+    <li>MioCash non raccoglie statistiche d'uso, non usa pubblicità e non contiene sistemi di tracciamento.</li>
+    <li>Quando esporti un archivio per passarlo a un altro dispositivo, il file è cifrato con una password scelta da te e lo invii tu, con il mezzo che preferisci.</li>
+  </ul>
+
+  <h2>Backup su Google Drive (facoltativo)</h2>
+  <p>Nell'app Android puoi attivare il backup automatico su Google Drive. Se lo attivi:</p>
+  <ul>
+    <li>MioCash chiede a Google soltanto il permesso di gestire <strong>i file creati da MioCash</strong> (permesso <code>drive.file</code>). Non può vedere, leggere o modificare gli altri file del tuo Drive.</li>
+    <li>Ogni backup è cifrato sul telefono, con una password scelta da te, <strong>prima</strong> di essere caricato. Su Google Drive arriva un file illeggibile senza quella password: né Google né altri possono vederne il contenuto.</li>
+    <li>I file vanno nella cartella «MioCash» del tuo Drive, sul tuo account. MioCash legge l'indirizzo email dell'account solo per mostrartelo nelle impostazioni dell'app; non lo invia a nessuno.</li>
+    <li>I dati ricevuti dalle API di Google servono solo a salvare e ripristinare i tuoi backup. Non vengono trasferiti a terzi, né usati per pubblicità o per altri scopi.</li>
+    <li>Puoi fermare il backup quando vuoi dall'app (Impostazioni › Backup su Google Drive › Scollega) oppure togliere il permesso dal tuo account Google, nella pagina <a href="https://myaccount.google.com/connections">App e servizi collegati</a>. I file già salvati restano sul tuo Drive finché non li elimini tu.</li>
+  </ul>
+  <p>L'uso delle informazioni ricevute dalle API di Google rispetta le <a href="https://developers.google.com/terms/api-services-user-data-policy">norme sui dati utente dei servizi API di Google</a>, compresi i requisiti di uso limitato.</p>
+
+  <h2>Collegamenti a internet</h2>
+  <ul>
+    <li><strong>Aggiornamenti:</strong> l'app controlla su GitHub se c'è una nuova versione e, se lo chiedi, la scarica. GitHub riceve l'indirizzo IP del dispositivo, come per qualsiasi pagina web.</li>
+    <li><strong>Questo sito</strong> è ospitato da GitHub Pages e usa i caratteri di Google Fonts; non usa cookie né strumenti di analisi.</li>
+  </ul>
+
+  <h2>Modifiche</h2>
+  <p>Se questa informativa cambia, la nuova versione viene pubblicata su questa pagina con la data di aggiornamento.</p>
+</main>
+
+<footer>
+  <div class="contenitore"><a href="./">MioCash</a> · Prima nota a partita doppia</div>
+</footer>
+
+</body>
+</html>
